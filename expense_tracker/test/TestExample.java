@@ -1,9 +1,8 @@
 // package test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import model.Transactions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,6 +10,9 @@ import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
 import model.Transaction;
 import view.ExpenseTrackerView;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 
 public class TestExample {
@@ -76,5 +78,13 @@ public class TestExample {
         double totalCost = getTotalCost();
         assertEquals(0.00, totalCost, 0.01);
     }
-    
+
+    @Test
+    public void testGetTransactions() {
+      final Transaction transactionOne = new Transaction(1.0,"food");
+        final Transaction transactionTwo = new Transaction(10.0,"entertainment");
+      final List<Transaction> expected = List.of(transactionOne,transactionTwo);
+      final Transactions transactions = new Transactions(expected);
+      assertThat(transactions.getTransactions(),is(expected));
+    }
 }
