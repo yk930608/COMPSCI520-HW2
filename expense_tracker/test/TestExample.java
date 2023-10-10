@@ -1,32 +1,30 @@
 // package test;
 
-import java.util.List;
-
-import model.Transactions;
+import controller.ExpenseTrackerController;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import controller.ExpenseTrackerController;
-import model.ExpenseTrackerModel;
-import model.Transaction;
 import view.ExpenseTrackerView;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class TestExample {
-  
-  private ExpenseTrackerModel model;
-  private ExpenseTrackerView view;
-  private ExpenseTrackerController controller;
 
-  @Before
-  public void setup() {
-    model = new ExpenseTrackerModel();
-    view = new ExpenseTrackerView();
-    controller = new ExpenseTrackerController(model, view);
-  }
+    private ExpenseTrackerModel model;
+    private ExpenseTrackerView view;
+    private ExpenseTrackerController controller;
+
+    @Before
+    public void setup() {
+        model = new ExpenseTrackerModel();
+        view = new ExpenseTrackerView();
+        controller = new ExpenseTrackerController(model, view);
+    }
 
     public double getTotalCost() {
         double totalCost = 0.0;
@@ -36,20 +34,19 @@ public class TestExample {
         }
         return totalCost;
     }
-    
 
 
     @Test
     public void testAddTransaction() {
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
-    
+
         // Perform the action: Add a transaction
         assertTrue(controller.addTransaction(50.00, "food"));
-    
+
         // Post-condition: List of transactions contains one transaction
         assertEquals(1, model.getTransactions().size());
-    
+
         // Check the contents of the list
         assertEquals(50.00, getTotalCost(), 0.01);
     }
@@ -59,21 +56,21 @@ public class TestExample {
     public void testRemoveTransaction() {
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
-    
+
         // Perform the action: Add and remove a transaction
         Transaction addedTransaction = new Transaction(50.00, "Groceries");
         model.addTransaction(addedTransaction);
-    
+
         // Pre-condition: List of transactions contains one transaction
         assertEquals(1, model.getTransactions().size());
-    
+
         // Perform the action: Remove the transaction
         model.removeTransaction(addedTransaction);
-    
+
         // Post-condition: List of transactions is empty
         List<Transaction> transactions = model.getTransactions();
         assertEquals(0, transactions.size());
-    
+
         // Check the total cost after removing the transaction
         double totalCost = getTotalCost();
         assertEquals(0.00, totalCost, 0.01);
@@ -81,10 +78,36 @@ public class TestExample {
 
     @Test
     public void testGetTransactions() {
-      final Transaction transactionOne = new Transaction(1.0,"food");
-        final Transaction transactionTwo = new Transaction(10.0,"entertainment");
-      final List<Transaction> expected = List.of(transactionOne,transactionTwo);
-      final Transactions transactions = new Transactions(expected);
-      assertThat(transactions.getTransactions(),is(expected));
+        final Transaction transactionOne = new Transaction(1.0, "food");
+        final Transaction transactionTwo = new Transaction(10.0, "entertainment");
+        final List<Transaction> expected = List.of(transactionOne, transactionTwo);
+        final Transactions transactions = new Transactions(expected);
+        assertThat(transactions.getTransactions(), is(expected));
+    }
+
+    @Test
+    public void testCreateAmountFilter_throwsRunningTimeException() {
+        double invalidLowerBound = -1.0;
+        double invalidUpperBound = 1001.0;
+        double validUpperBound = 95.0;
+        double validLowerBound = 1.0;
+        double higherLowerBound = 96.0;
+        RuntimeException invalidUpperBoundException
+                = assertThrows(RuntimeException.class, () -> new AmountFilter(invalidUpperBound, validLowerBound));
+        assertEquals("invalid upperBound", invalidUpperBoundException.getMessage());
+        RuntimeException invalidLowerBoundException
+                = assertThrows(RuntimeException.class, () -> new AmountFilter(validUpperBound, invalidLowerBound));
+        assertEquals("invalid lowerBound", invalidLowerBoundException.getMessage());
+        RuntimeException higherLowerBoundException
+                = assertThrows(RuntimeException.class, () -> new AmountFilter(validUpperBound, higherLowerBound));
+        assertEquals("lowerBound needs be lower than upperbound", higherLowerBoundException.getMessage());
+    }
+
+    @Test
+    public void testCreateCategoryFilter_throwsRunningTimeException() {
+        String invalidCategory = "drink";
+        RuntimeException invalidCategoryException
+                = assertThrows(RuntimeException.class, () -> new CategoryFilter(invalidCategory));
+        assertEquals("invalid category", invalidCategoryException.getMessage());
     }
 }
