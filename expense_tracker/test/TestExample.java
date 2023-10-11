@@ -3,14 +3,15 @@
 import controller.ExpenseTrackerController;
 import model.*;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import view.ExpenseTrackerView;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class TestExample {
@@ -19,6 +20,8 @@ public class TestExample {
     private ExpenseTrackerView view;
     private ExpenseTrackerController controller;
 
+    @Rule
+    public ExpectedException exceptionRule  = ExpectedException.none();
     @Before
     public void setup() {
         model = new ExpenseTrackerModel();
@@ -92,22 +95,40 @@ public class TestExample {
         double validUpperBound = 95.0;
         double validLowerBound = 1.0;
         double higherLowerBound = 96.0;
-        RuntimeException invalidUpperBoundException
-                = assertThrows(RuntimeException.class, () -> new AmountFilter(invalidUpperBound, validLowerBound));
-        assertEquals("invalid upperBound", invalidUpperBoundException.getMessage());
-        RuntimeException invalidLowerBoundException
-                = assertThrows(RuntimeException.class, () -> new AmountFilter(validUpperBound, invalidLowerBound));
-        assertEquals("invalid lowerBound", invalidLowerBoundException.getMessage());
-        RuntimeException higherLowerBoundException
-                = assertThrows(RuntimeException.class, () -> new AmountFilter(validUpperBound, higherLowerBound));
-        assertEquals("lowerBound needs be lower than upperbound", higherLowerBoundException.getMessage());
+        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expectMessage("invalid upperBound");
+        new AmountFilter(invalidUpperBound, validLowerBound);
+        exceptionRule.expectMessage("invalid lowerBound");
+        new AmountFilter(validUpperBound, invalidLowerBound);
+        exceptionRule.expectMessage("lowerBound needs be lower than upperbound");
+        new AmountFilter(validUpperBound, higherLowerBound);
     }
 
     @Test
     public void testCreateCategoryFilter_throwsRunningTimeException() {
         String invalidCategory = "drink";
-        RuntimeException invalidCategoryException
-                = assertThrows(RuntimeException.class, () -> new CategoryFilter(invalidCategory));
-        assertEquals("invalid category", invalidCategoryException.getMessage());
+        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expectMessage("invalid category");
+        new CategoryFilter(invalidCategory);
+    }
+
+    @Test
+    public void testAmountFilter_Filter(){
+        final Transaction transactionOne = new Transaction(2.0, "food");
+        final Transaction transactionTwo = new Transaction(10.0, "entertainment");
+        final List<Transaction> transactions = List.of(transactionOne, transactionTwo);
+        final List<Transaction> expected = List.of(transactionOne);
+        final AmountFilter amountFilter = new AmountFilter(9.0, 1.0);
+        assertThat(amountFilter.filter(transactions), is(expected));
+    }
+
+    @Test
+    public void testCategoryFilter_Filter(){
+        final Transaction transactionOne = new Transaction(2.0, "food");
+        final Transaction transactionTwo = new Transaction(10.0, "entertainment");
+        final List<Transaction> transactions = List.of(transactionOne, transactionTwo);
+        final List<Transaction> expected = List.of(transactionTwo);
+        final CategoryFilter amountFilter = new CategoryFilter("entertainment");
+        assertThat(amountFilter.filter(transactions), is(expected));
     }
 }
