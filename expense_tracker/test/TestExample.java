@@ -16,12 +16,12 @@ import static org.junit.Assert.*;
 
 public class TestExample {
 
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
     private ExpenseTrackerModel model;
     private ExpenseTrackerView view;
     private ExpenseTrackerController controller;
 
-    @Rule
-    public ExpectedException exceptionRule  = ExpectedException.none();
     @Before
     public void setup() {
         model = new ExpenseTrackerModel();
@@ -113,7 +113,7 @@ public class TestExample {
     }
 
     @Test
-    public void testAmountFilter_Filter(){
+    public void testAmountFilter_Filter() {
         final Transaction transactionOne = new Transaction(2.0, "food");
         final Transaction transactionTwo = new Transaction(10.0, "entertainment");
         final List<Transaction> transactions = List.of(transactionOne, transactionTwo);
@@ -123,7 +123,7 @@ public class TestExample {
     }
 
     @Test
-    public void testCategoryFilter_Filter(){
+    public void testCategoryFilter_Filter() {
         final Transaction transactionOne = new Transaction(2.0, "food");
         final Transaction transactionTwo = new Transaction(10.0, "entertainment");
         final List<Transaction> transactions = List.of(transactionOne, transactionTwo);

@@ -2,6 +2,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import controller.ExpenseTrackerController;
+import model.AmountFilter;
+import model.CategoryFilter;
 import model.ExpenseTrackerModel;
 import view.ExpenseTrackerView;
 import model.Transaction;
@@ -34,6 +36,32 @@ public class ExpenseTrackerApp {
       }
     });
 
+    view.getApplyAmountFilter().addActionListener(e -> {
+      // Get transaction data from view
+      double filterUpperBound = view.getFilterUpperBoundField();
+      double filterLowerBound = view.getFilterUpperLowerField();
+
+      try{
+        AmountFilter amountFilter = new AmountFilter(filterUpperBound, filterLowerBound);
+        controller.applyFilter(amountFilter);
+      } catch (RuntimeException exception) {
+        JOptionPane.showMessageDialog(view, exception.getMessage());
+        view.toFront();
+      }
+    });
+
+    view.getApplyCategoryFilter().addActionListener(e -> {
+      // Get transaction data from view
+      String filterCategory = view.getFilterCategoryField();
+
+      try{
+        CategoryFilter categoryFilter = new CategoryFilter(filterCategory);
+        controller.applyFilter(categoryFilter);
+      } catch (RuntimeException exception) {
+        JOptionPane.showMessageDialog(view, exception.getMessage());
+        view.toFront();
+      }
+    });
   }
 
 }
