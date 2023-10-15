@@ -35,6 +35,8 @@ public class ExpenseTrackerView extends JFrame {
 
     addTransactionBtn = new JButton("Add Transaction");
 
+    undoBtn = new JButton("Undo");
+
     applyAmountFilter = new JButton("filter by amount");
 
     applyCategoryFilter = new JButton("filter by category");
