@@ -36,6 +36,10 @@ public class ExpenseTrackerApp {
       }
     });
 
+    view.getUndoBtn().addActionListener(e -> {
+      boolean undo = controller.undoRecord();
+    });
+
     view.getApplyAmountFilter().addActionListener(e -> {
       // Get transaction data from view
       double filterUpperBound = view.getFilterUpperBoundField();

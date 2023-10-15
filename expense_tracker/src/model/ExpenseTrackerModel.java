@@ -15,6 +15,10 @@ public class ExpenseTrackerModel {
     transactions.add(t);
   }
 
+  public List<Transaction> updateTransaction(List<Transaction> t) {
+    return transactions = t;
+  }
+
   public void removeTransaction(Transaction t) {
     transactions.remove(t);
   }

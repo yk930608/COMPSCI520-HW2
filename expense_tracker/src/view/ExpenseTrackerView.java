@@ -24,6 +24,7 @@ public class ExpenseTrackerView extends JFrame {
   private JButton applyAmountFilter;
   private JTextField filterCategoryField;
   private JButton applyCategoryFilter;
+  private JButton undoBtn;
 
   public ExpenseTrackerView() {
     setTitle("Expense Tracker"); // Set title
@@ -83,6 +84,7 @@ public class ExpenseTrackerView extends JFrame {
 
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(addTransactionBtn);
+    buttonPanel.add(undoBtn);
     // Add panels to frame
     add(inputPanel, BorderLayout.NORTH);
     add(filterPanel, BorderLayout.WEST);
@@ -126,6 +128,10 @@ public class ExpenseTrackerView extends JFrame {
     return addTransactionBtn;
   }
 
+  public JButton getUndoBtn() {
+    return undoBtn;
+  }
+
   public JButton getApplyAmountFilter() {
     return applyAmountFilter;
   }
@@ -137,6 +143,7 @@ public class ExpenseTrackerView extends JFrame {
   public DefaultTableModel getTableModel() {
     return model;
   }
+
   // Other view methods
   public JTable getTransactionsTable() {
     return transactionsTable;
@@ -176,12 +183,15 @@ public class ExpenseTrackerView extends JFrame {
     this.amountField = amountField;
   }
 
-  
   public String getCategoryField() {
     return categoryField.getText();
   }
 
   public void setCategoryField(JTextField categoryField) {
     this.categoryField = categoryField;
+  }
+
+  public int[] getUserSelection() {
+    return transactionsTable.getSelectedRows();
   }
 }

@@ -48,6 +48,20 @@ public class ExpenseTrackerController {
         return true;
     }
 
+    public boolean undoRecord() {
+        List<Transaction> currentTransactions = model.getTransactions();
+        int[] selectedRow = view.getUserSelection();
+        if (selectedRow == null || selectedRow.length == 0) {
+            currentTransactions.remove(currentTransactions.get(currentTransactions.size() - 1));
+        }
+        for (int i = 0; i < selectedRow.length; i++) {
+            currentTransactions.remove(currentTransactions.get(i));
+        }
+        model.updateTransaction(currentTransactions);
+        view.refreshTable(currentTransactions);
+        return true;
+    }
+
     //   Other controller methods
     public void applyFilter(TransactionFilter transactionFilter) {
         List<Transaction> currentTransactions = model.getTransactions();
