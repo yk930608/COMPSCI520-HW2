@@ -38,6 +38,11 @@ public class ExpenseTrackerApp {
 
     view.getUndoBtn().addActionListener(e -> {
       boolean undo = controller.undoRecord();
+
+      if (!undo) {
+        JOptionPane.showMessageDialog(view, "No entry is available!");
+        view.toFront();
+      }
     });
 
     view.getApplyAmountFilter().addActionListener(e -> {

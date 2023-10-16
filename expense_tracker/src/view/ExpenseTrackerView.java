@@ -30,16 +30,16 @@ public class ExpenseTrackerView extends JFrame {
     setTitle("Expense Tracker"); // Set title
     setSize(600, 400); // Make GUI larger
 
-    String[] columnNames = {"serial", "Amount", "Category", "Date"};
+    String[] columnNames = {"Serial", "Amount", "Category", "Date"};
     this.model = new DefaultTableModel(columnNames, 0);
 
     addTransactionBtn = new JButton("Add Transaction");
 
     undoBtn = new JButton("Undo");
 
-    applyAmountFilter = new JButton("filter by amount");
+    applyAmountFilter = new JButton("Filter by Amount");
 
-    applyCategoryFilter = new JButton("filter by category");
+    applyCategoryFilter = new JButton("Filter by Category");
 
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");

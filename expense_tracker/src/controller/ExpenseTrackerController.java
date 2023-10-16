@@ -8,6 +8,8 @@ import view.ExpenseTrackerView;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExpenseTrackerController {
@@ -51,11 +53,17 @@ public class ExpenseTrackerController {
     public boolean undoRecord() {
         List<Transaction> currentTransactions = model.getTransactions();
         int[] selectedRow = view.getUserSelection();
+        if (currentTransactions.size() == 0) {
+            return false;
+        }
         if (selectedRow == null || selectedRow.length == 0) {
             currentTransactions.remove(currentTransactions.get(currentTransactions.size() - 1));
         }
-        for (int i = 0; i < selectedRow.length; i++) {
-            currentTransactions.remove(currentTransactions.get(i));
+        for (int i = selectedRow.length - 1; i >= 0; i--) {
+            int j = selectedRow[i];
+            if (j >= 0 && j < currentTransactions.size()) {
+                currentTransactions.remove(j);
+            }
         }
         model.updateTransaction(currentTransactions);
         view.refreshTable(currentTransactions);

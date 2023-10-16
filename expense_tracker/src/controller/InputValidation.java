@@ -33,7 +33,7 @@ public class InputValidation {
       return false;
     }
 
-    String[] validWords = {"food", "travel", "bills", "entertainment", "other"};
+    String[] validWords = {"food", "travel", "bills", "entertainment", "transportation", "other"};
 
     if(!Arrays.asList(validWords).contains(category.toLowerCase())) {
       // invalid word  

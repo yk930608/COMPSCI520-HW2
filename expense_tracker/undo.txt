@@ -1,0 +1,61 @@
+# Usability: Undo Functionality
+Here are the corresponding changes needed in order to achieve the undo functionality in MVC architecture.
+
+## Model
+**Update Method**: This method in the model is used to update the Transaction table each time after the the user clicked on the Undo Button. 
+```
+//In the ExpenseTrackerModel.java, add the following code:
+public List<Transaction> updateTransaction(List<Transaction> t) {
+    return transactions = t;
+}
+```
+
+## View
+**Undo Button**: Add a button or user interface element in the view that allows the user to trigger the "undo" action.
+**Feedback**: A message will be displayed when there is no entry available to undo.
+```
+//In the ExpenseTrackerView.java, add the following code:
+private JButton undoBtn;
+undoBtn = new JButton("Undo");
+buttonPanel.add(undoBtn);
+public JButton getUndoBtn() {
+    return undoBtn;
+}
+public int[] getUserSelection() {
+    return transactionsTable.getSelectedRows();
+}
+
+//In ExpenseTrackerApp.java, add the following code: 
+view.getUndoBtn().addActionListener(e -> {
+    boolean undo = controller.undoRecord();
+    if (!undo) {
+        JOptionPane.showMessageDialog(view, "No entry is available!");
+        view.toFront();
+    }
+});
+```
+
+## Controller
+**Undo Action**: An "undo" action is created in the controller. This method retrieves the last transaction from the model's history and applies it to the model to revert the last changes automatically when there is no row selected. If the user selects multiple rows, these transactions will be removed together and the Total Cost will also be updated.
+```
+// In ExpenseTrackerController.java, add the following code:
+public boolean undoRecord() {
+    List<Transaction> currentTransactions = model.getTransactions();
+    int[] selectedRow = view.getUserSelection();
+    if (currentTransactions.size() == 0) {
+        return false;
+    }
+    if (selectedRow == null || selectedRow.length == 0) {
+        currentTransactions.remove(currentTransactions.get(currentTransactions.size() - 1));
+    }
+    for (int i = selectedRow.length - 1; i >= 0; i--) {
+        int j = selectedRow[i];
+        if (j >= 0 && j < currentTransactions.size()) {
+            currentTransactions.remove(j);
+        }
+    }
+    model.updateTransaction(currentTransactions);
+    view.refreshTable(currentTransactions);
+    return true;
+}
+```
