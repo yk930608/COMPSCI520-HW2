@@ -50,15 +50,19 @@ public class ExpenseTrackerController {
         return true;
     }
 
+    // Undo the last transcation input or delete records based on user selection
     public boolean undoRecord() {
         List<Transaction> currentTransactions = model.getTransactions();
         int[] selectedRow = view.getUserSelection();
+        // If the transaction table is empty return false
         if (currentTransactions.size() == 0) {
             return false;
         }
+        // If no row is been selected, remove the last row
         if (selectedRow == null || selectedRow.length == 0) {
             currentTransactions.remove(currentTransactions.get(currentTransactions.size() - 1));
         }
+        // If multiple rows are been selected, remove all these together
         for (int i = selectedRow.length - 1; i >= 0; i--) {
             int j = selectedRow[i];
             if (j >= 0 && j < currentTransactions.size()) {
@@ -70,7 +74,7 @@ public class ExpenseTrackerController {
         return true;
     }
 
-    //   Other controller methods
+    //  Apply filter function and highlight the matching rows
     public void applyFilter(TransactionFilter transactionFilter) {
         List<Transaction> currentTransactions = model.getTransactions();
         view.refreshTable(currentTransactions);

@@ -36,15 +36,17 @@ public class ExpenseTrackerApp {
       }
     });
 
+    // Handle undo transaction button clicks
     view.getUndoBtn().addActionListener(e -> {
       boolean undo = controller.undoRecord();
-
+      // If there is no entry to undo display a message
       if (!undo) {
         JOptionPane.showMessageDialog(view, "No entry is available!");
         view.toFront();
       }
     });
 
+    // Handle amount filter button clicks
     view.getApplyAmountFilter().addActionListener(e -> {
       // Get transaction data from view
       double filterUpperBound = view.getFilterUpperBoundField();
@@ -59,6 +61,7 @@ public class ExpenseTrackerApp {
       }
     });
 
+    // Handle category filter button clicks
     view.getApplyCategoryFilter().addActionListener(e -> {
       // Get transaction data from view
       String filterCategory = view.getFilterCategoryField();
